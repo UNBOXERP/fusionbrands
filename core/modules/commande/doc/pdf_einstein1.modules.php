@@ -436,7 +436,7 @@ class pdf_einstein1 extends ModelePDFCommandes
 
 				// Loop on each lines
 
-                     $sql4 = " SELECT cex.notes,  CONCAT_WS(' ',p.ref,p.label,p.description), cd. price, cd.qty, cd.total_ht, cd.description as cdp, p.description,  row_number() over(order by p.description DESC) AS rowno  FROM ".MAIN_DB_PREFIX."commandedet AS cd ";
+                     $sql4 = " SELECT cex.notes,  CONCAT_WS(' ',p.label,p.description), cd. price, cd.qty, cd.total_ht, cd.description as cdp, p.description,  row_number() over(order by p.description DESC) AS rowno, p.ref  FROM ".MAIN_DB_PREFIX."commandedet AS cd ";
                 $sql4.= " LEFT JOIN ".MAIN_DB_PREFIX."commandedet_extrafields AS cex ON cd.rowid = cex.fk_object ";
                 $sql4.= " LEFT JOIN ".MAIN_DB_PREFIX."product AS p ON p.rowid = cd.fk_product ";
                 $sql4.= " LEFT JOIN ".MAIN_DB_PREFIX."product_extrafields AS pex ON p.rowid = pex.fk_object ";
@@ -472,7 +472,7 @@ class pdf_einstein1 extends ModelePDFCommandes
 					$pdf->startTransaction();
 
     pdf_writelinedesc($pdf,'', $i, $outputlangs, $this->posxtva - $curX-75, 3, $curX, $curY, $hideref, $hidedesc =1);
-					$pdf->MultiCell($this->posxtva - $curX-75, 3, $note[$i][7].'.- '. $note[$i][1].''. $note[$i][5], $curX, $curY, 0);
+					$pdf->MultiCell($this->posxtva - $curX-75, 3, $note[$i][7].'.- '. $note[$i][8], $curX, $curY, 0);
 
 					
 					$pageposafter = $pdf->getPage();
@@ -483,7 +483,7 @@ class pdf_einstein1 extends ModelePDFCommandes
 						//print $pageposafter.'-'.$pageposbefore;exit;
 						$pdf->setPageOrientation('', 1, $heightforfooter); // The only function to edit the bottom margin of current page to set it.
 pdf_writelinedesc($pdf, '', $i, $outputlangs, $this->posxtva - $curX-75, 4, $curX, $curY, $hideref, $hidedesc);
-$pdf->MultiCell($this->posxtva - $curX-75, 4,$note[$i][7].'.- '. $note[$i][1].''. $note[$i][5] , $curX, $curY, 0);
+$pdf->MultiCell($this->posxtva - $curX-75, 4,$note[$i][7].'.- '. $note[$i][8], $curX, $curY, 0);
 
 						
 						$pageposafter = $pdf->getPage();
@@ -542,9 +542,15 @@ $pdf->MultiCell($this->posxtva - $curX-75, 4,$note[$i][7].'.- '. $note[$i][1].''
 					$pdf->SetXY($this->posxqty, $curY);
 					$pdf->MultiCell($this->posxunit - $this->posxqty - 0.8, 4,$note[$i][3], 0, 'R'); // Enough for 6 chars
 					
+					//label and descriptio
 					//notes and features
-					$pdf->SetXY($curX  + 43, $curY);
-					$pdf->MultiCell($this->posxunit - $this->posxqty + 30.8, 4, $note[$i][0], 0, 'L');
+					$pdf->SetXY($curX  + 28, $curY);
+					$pdf->MultiCell($this->posxunit - $this->posxqty + 20, 4, $note[$i][1], 0, 'L');
+
+					
+					//notes and features
+					$pdf->SetXY($curX  + 65, $curY-1);
+					$pdf->MultiCell($this->posxunit - $this->posxqty + 30.5, 4, $note[$i][0], 0, 'L');
 
 					// Unit
 					if (!empty($conf->global->PRODUCT_USE_UNITS))
@@ -1236,20 +1242,28 @@ $pdf->MultiCell($this->posxtva - $curX-75, 4,$note[$i][7].'.- '. $note[$i][1].''
 		{
 			$pdf->line($this->marge_gauche, $tab_top + 5, $this->page_largeur - $this->marge_droite, $tab_top + 5); // line takes a position y in 2nd parameter and 4th parameter
 
-			$pdf->SetXY($this->posxdesc - 1, $tab_top + 1);
+			$pdf->SetXY($this->posxdesc +34, $tab_top + 1);
 			$pdf->MultiCell(108, 2, $outputlangs->transnoentities("Designation"), '', 'L');
 
 
                //notes and  Features label 
-                  $pdf->SetXY($this->posxdesc + 63, $tab_top + 1);
+                  $pdf->SetXY($this->posxdesc + 74, $tab_top + 1);
 			$pdf->MultiCell(108, 2, 'Notes & Features', '', 'L');
+		}
+		
+		//sku
+		$pdf->line($this->posxup - 100, $tab_top, $this->posxup -100, $tab_top + $tab_height);
+			if (empty($hidetop))
+		{
+		$pdf->SetXY($this->posxdesc , $tab_top + 1);
+			$pdf->MultiCell(108, 2, "SKU", '', 'L');
 		}
 
 		if (empty($conf->global->MAIN_GENERATE_DOCUMENTS_WITHOUT_VAT) && empty($conf->global->MAIN_GENERATE_DOCUMENTS_WITHOUT_VAT_COLUMN))
 		{
                   //notes and Features
 
-              $pdf->line($this->posxtva - 70, $tab_top, $this->posxtva - 70, $tab_top + $tab_height);
+              $pdf->line($this->posxtva - 47, $tab_top, $this->posxtva - 47, $tab_top + $tab_height);
 
 			$pdf->line($this->posxtva - 1, $tab_top, $this->posxtva - 1, $tab_top + $tab_height);
 			if (empty($hidetop))

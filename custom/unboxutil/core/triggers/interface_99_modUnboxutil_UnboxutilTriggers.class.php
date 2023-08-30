@@ -234,6 +234,12 @@ class InterfaceUnboxutilTriggers extends DolibarrTriggers
 
             $resql2 = $this->db->query($sql2);
             }
+            elseif($custy == 3) {
+            $sql2  ="UPDATE "  . MAIN_DB_PREFIX . "commande SET fk_availability = 4,  date_livraison = DATE_ADD(date_commande, INTERVAL 3 WEEK) ";
+            $sql2 .=" WHERE rowid = ". $object->id;
+            
+            $resql2 = $this->db->query($sql2);
+            } 
 
             //case 'ORDER_DELETE':
             //case 'ORDER_CANCEL':

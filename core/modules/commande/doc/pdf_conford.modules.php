@@ -439,7 +439,7 @@ class pdf_conford extends ModelePDFCommandes
 
 				// Loop on each lines
 				
-				$sql4 = " SELECT cex.notes,  CONCAT_WS(' ',p.ref,p.label,p.description), cd. price, cd.qty, cd.total_ht, cd.description as cdp, p.description,  row_number() over(order by p.description DESC) AS rowno   FROM ".MAIN_DB_PREFIX."commandedet AS cd ";
+				$sql4 = " SELECT cex.notes,  CONCAT_WS(' ',p.label,p.description), cd. price, cd.qty, cd.total_ht, cd.description as cdp, p.description,  row_number() over(order by p.description DESC) AS rowno, p.ref   FROM ".MAIN_DB_PREFIX."commandedet AS cd ";
                 $sql4.= " LEFT JOIN ".MAIN_DB_PREFIX."commandedet_extrafields AS cex ON cd.rowid = cex.fk_object ";
                 $sql4.= " LEFT JOIN ".MAIN_DB_PREFIX."product AS p ON p.rowid = cd.fk_product ";
                 $sql4.= " LEFT JOIN ".MAIN_DB_PREFIX."product_extrafields AS pex ON p.rowid = pex.fk_object ";
@@ -517,8 +517,8 @@ class pdf_conford extends ModelePDFCommandes
                     
                     
                     $pdf->startTransaction();
-					$pdf->SetXY($this->posxup -66, $curY);
-					$pdf->MultiCell(60,'', $note[$i][0], 0, 'L', 0);
+					$pdf->SetXY($this->posxup -41, $curY);
+					$pdf->MultiCell(70,'', $note[$i][0], 0, 'L', 0);
                  
 					
 					$curY = $nexY +4;
@@ -537,7 +537,7 @@ class pdf_conford extends ModelePDFCommandes
 					$pdf->startTransaction();
 
     pdf_writelinedesc($pdf,'', $i, $outputlangs, $this->posxtva - $curX-75, 3, $curX, $curY-5, $hideref, $hidedesc =1);
-					$pdf->MultiCell($this->posxtva - $curX-55, 3,$note[$i][7].'.- '. $note[$i][1].'  '. $note[$i][5], $curX, $curY-5, 0);
+					$pdf->MultiCell($this->posxtva - $curX-55, 3,$note[$i][7].'.- '. $note[$i][8], $curX, $curY-5, 0);
 
 					$pageposafter = $pdf->getPage();
 					if ($pageposafter > $pageposbefore)	// There is a pagebreak
@@ -548,7 +548,7 @@ class pdf_conford extends ModelePDFCommandes
 						$pdf->setPageOrientation('', 1, $heightforfooter); // The only function to edit the bottom margin of current page to set it.
 
     pdf_writelinedesc($pdf, '', $i, $outputlangs, $this->posxtva - $curX-55, 4, $curX, $curY-5, $hideref, $hidedesc);
-						$pdf->MultiCell($this->posxtva - $curX-55, 4,$note[$i][7].'.- '. $note[$i][1].'  '. $note[$i][5], $curX, $curY-5, 0);
+						$pdf->MultiCell($this->posxtva - $curX-55, 4,$note[$i][7].'.- '. $note[$i][8], $curX, $curY-5, 0);
 
 						$pageposafter = $pdf->getPage();
 						$posyafter = $pdf->GetY();
@@ -617,6 +617,12 @@ class pdf_conford extends ModelePDFCommandes
 					$pdf->SetXY($this->posxup -6, $curY +4);
 					$pdf->MultiCell($this->posxqty - $this->posxup - 0.8, 3, ($dt5*0.0283).' '.m3 , 0, 'C', 0);*/
 
+					
+					//label and description
+					    $pdf->SetXY($this->posxup -99, $curY-4 );
+						$pdf->MultiCell($this->posxqty  - $this->posxup +34, 3, $note[$i][1], 0, 'C', 0);
+					
+					
 					// Quantity
 					
                         $qty = pdf_getlineqty($object, $i, $outputlangs, $hidedetails);
@@ -1377,17 +1383,24 @@ class pdf_conford extends ModelePDFCommandes
 		$this->printRect($pdf, $this->marge_gauche, $tab_top, $this->page_largeur - $this->marge_gauche - $this->marge_droite, $tab_height, $hidetop, $hidebottom); // Rect takes a length in 3rd parameter and 4th parameter
 
 		if (empty($hidetop))
-		{
+		{	
 			$pdf->line($this->marge_gauche, $tab_top + 5, $this->page_largeur - $this->marge_droite, $tab_top + 5); // line takes a position y in 2nd parameter and 4th parameter
 
-			$pdf->SetXY($this->posxdesc - 1, $tab_top + 1);
+			$pdf->SetXY($this->posxdesc + 45, $tab_top + 1);
 			$pdf->MultiCell(108, 2, "Description", '', 'L');
 		}
-		//note product
-			$pdf->line($this->posxup - 68, $tab_top, $this->posxup -68, $tab_top + $tab_height);
+		//sku
+		$pdf->line($this->posxup - 100, $tab_top, $this->posxup -100, $tab_top + $tab_height);
 			if (empty($hidetop))
 		{
-			$pdf->SetXY($this->posxdesc + 23, $tab_top + 1);
+		$pdf->SetXY($this->posxdesc , $tab_top + 1);
+			$pdf->MultiCell(108, 2, "SKU", '', 'L');
+		}
+		//note product
+			$pdf->line($this->posxup - 45, $tab_top, $this->posxup -45, $tab_top + $tab_height);
+			if (empty($hidetop))
+		{
+			$pdf->SetXY($this->posxdesc + 47, $tab_top + 1);
 			$pdf->MultiCell($this->posxdesc -18 - $this->posxup - 1, 2, "Notes & Features", '', 'C');
 		}
 
