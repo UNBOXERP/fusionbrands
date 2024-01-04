@@ -165,6 +165,12 @@ if ($id > 0 || !empty($ref))
 	<div class="container">
 <form method="post" action="import.php" enctype="multipart/form-data">
     <table align="center" >
+<font size="3">Step 1: Choose a template</font></td>
+	<tr></tr>
+	<tr></tr>
+            <td align="center" colspan="11">
+                <br><a href="../reports/report.php?leftmenu=Upload%20Templates&execute_mode=PREPARE&project=Dolibarr&target_output=HTML&xmlin=SkuQty.xml">Update SKU lines</a></br>
+        <tr>
         <tr>
             <td colspan="2">
                Import Order:
@@ -199,6 +205,20 @@ if ($id > 0 || !empty($ref))
             </td>
         </tr>
     </table>
+
+<td><font size="3">Steps Before: Upload your file
+Before uploading, make sure  of
+<br>
+- Your columns and rows match (verify ID)
+<br>
+- Not having an extra header row
+<br>
+- The file format must be csv
+<br>
+- Not having special characters ($#@%...) or formats. We recommend Text No format applied 
+<br>
+- Your data is correct (there is not an undo option)
+</font></td>
 	<br>
 	<br>
 	<br>
@@ -209,6 +229,16 @@ if ($id > 0 || !empty($ref))
 			<br><a>User Action: <strong><?php print  $usr; ?></strong></a></br>
 		</td> -->
 	</tr>
+
+<td><font size="3">See Uploaded Files</font></td>
+<tr></tr>
+	<tr></tr>
+	<td align="center" colspan="11">
+		<br><a href="../importorderlines/list.php?id=62">List</a></br>
+	</td>
+	
+
+	<tr>
 
 </form>
 </div>
@@ -225,7 +255,7 @@ if ($id > 0 || !empty($ref))
 					border-collapse: collapse;
 				}
 			</style>
-			<td>User</td>  <td>Date Imported</td>  <td>Imported File</td> <td>Total Uploaded</td> <td>Total Not Uploaded</td>
+		<!--	<td>User</td>  <td>Date Imported</td>  <td>Imported File</td> <td>Total Uploaded</td> <td>Total Not Uploaded</td>-->
 		</tr>
 
 		<tr>
@@ -233,14 +263,14 @@ if ($id > 0 || !empty($ref))
 			{ ?>
 		<tr>
 
-			<td><?php print  $ordi[$i][0] ; ?></td>
+			<!-- <td><?php print  $ordi[$i][0] ; ?></td>
 
 			<td><?php print  $ordi[$i][1] ; ?></td>
 			<td><a href="<?php print $ordi[$i][2]  ; ?>" title="Link title" target="_blank"><?php print  $ordi[$i][2] ; ?></a></td>
 			<td><?php print  $ordi[$i][3] ; ?></td>
 			<td><?php print  $ordi[$i][4] ; ?></td>
-			<?php } ?>
-		</tr>
+			<?php } ?> 
+		</tr> 
 		</tr>
 	</table>
 
